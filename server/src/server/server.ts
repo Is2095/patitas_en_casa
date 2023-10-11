@@ -2,9 +2,9 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+//import router from "../routers";
 
 const app = express();
-
 
 app.use(express.json());
 app.use(cors());
@@ -21,9 +21,11 @@ app.use((req, res, next) => {
         'Access-Control-Allow-Methods', 
         'GET, POST, OPTIONS, PUT, DELETE'
     );
-    res.header("X-Total-Count", "1000")
+    res.header("X-Total-Count", "1000");
 
     next();
 });
+
+//app.use("/api", router);
 
 export default app;
