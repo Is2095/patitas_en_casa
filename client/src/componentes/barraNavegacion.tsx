@@ -54,7 +54,7 @@ function BarraNavegacion() {
               />) : null
           }
           <li className="flex justify-center px-2">
-            <p className="text-sky-500">{session?.user?.name}</p>
+            <p className="text-sky-500">{session?.user?.name?.split(' ')?.[0]}</p>
           </li>
 
 
@@ -62,11 +62,20 @@ function BarraNavegacion() {
       </div>
 
       <div className="border border-red-400 m-1">
-        <ul className="flex justify-around">
-          <li className="">
+        <ul className="flex">
+          <li className="mx-3">
             <Link href='/' className="text-sky-700 hover:text-sky-900 hover:font-bold">Inicio</Link>
           </li>
-          <li className="">
+          <li className="mx-3">
+            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Protectoras</Link>
+          </li>
+          <li className="mx-3">
+            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Dar en adopción</Link>
+          </li>
+          <li className="mx-3">
+            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Busca tu match</Link>
+          </li>
+          <li className="mx-3">
             <Link href='/about' className="text-sky-700 hover:text-sky-900 hover:font-bold">Acerca de</Link>
           </li>
         </ul>
