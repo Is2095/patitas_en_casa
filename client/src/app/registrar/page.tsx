@@ -36,7 +36,6 @@ function RegisPage() {
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
-    console.log('onSubmit');
 
     if (noRobot) {
 

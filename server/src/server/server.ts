@@ -2,7 +2,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-//import router from "../routers";
+import router from "../routers";
 
 const app = express();
 
@@ -26,6 +26,6 @@ app.use((req, res, next) => {
     next();
 });
 
-//app.use("/api", router);
+app.use("/api", router);
 
 export default app;

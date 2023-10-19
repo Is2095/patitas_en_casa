@@ -26,6 +26,7 @@ const usuarioSchema = new Schema({
     password: {
         type: String,
         required: [true, "El password es requerido (DB)"],
+        default: 'aA1=aaaa',
         select: false
     },
     nombre: {
@@ -40,7 +41,8 @@ const usuarioSchema = new Schema({
         match: [
             /^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/, 
             "Número de teléfono no válido"
-        ]
+        ],
+        default: 542616950111
     },
     provider: {
         type: String,
@@ -54,6 +56,7 @@ const usuarioSchema = new Schema({
     nivelAcceso: {
         type: String,
         requered: true,
+        default: '1'
     },
     imagen: {
         type: String,
