@@ -36,14 +36,47 @@ function RegisPage() {
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
+    const datosConfirmar = {
+      email: values.email,
+      nombre: values.nombre
+    }
 
     if (noRobot) {
+      const envioEmailCodigo = await axios.post("http://localhost:3001/api/confirmacion", datosConfirmar)
 
-      Swal.fire({
-        title: 'Te has registrado en Patitas en casas',
-        text: ' noRobot',
-        icon: 'success'
-      })
+      if (envioEmailCodigo.data.codigoConfirmacion) {
+        const result = await Swal.fire({
+          title: 'Ingrese el código',
+          input: 'text',
+          inputPlaceholder: 'Ingrese el código...',
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value || value !== envioEmailCodigo.data.codigoConfirmacion) {
+              return 'Código incorrecto'
+            } else {
+            // setNoRobot(false)
+              return null
+            }
+          }
+        });
+
+        if (result.isConfirmed) {
+          //const registrarUsuario = await axios.post("http://localhost:3001/api/registrarUsuario", values)
+          await Swal.fire({
+            title: 'Email confirmado',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          return
+        }
+      }
+      if (envioEmailCodigo.status) {
+        Swal.fire({
+          title: 'Te has registrado en Patitas en casas',
+          text: ' noRobot',
+          icon: 'success'
+        })
+      }
     }
   }
 
