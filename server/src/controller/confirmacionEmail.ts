@@ -5,9 +5,6 @@ import EnvioCodigoConfirmacion from '../handlers/envioCodigoConfirmacion';
 import UsuarioRegistrado from '../handlers/usuarioRegistrados';
 import { Request, Response } from 'express';
 
-import { conectar } from '../baseDeDatos/conectar';
-import Usuarios from '../modelos/usuarios';
-
 type Datos = {
     email: string
     nombre: string

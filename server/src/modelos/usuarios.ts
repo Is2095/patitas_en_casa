@@ -5,7 +5,7 @@ interface Usuario extends Document {
     email: string;
     password: string;
     nombre: string;
-    telefono: number;
+    telefono: string;
     provider: string;
     //favoritos: Animal[];
     nivelAcceso: string;
@@ -36,13 +36,13 @@ const usuarioSchema = new Schema({
         maxLength: [20, "El nombre devbe tener menos de 20 caracteres"]
     },
     telefono: {
-        type: Number,
+        type: String,
         requered: [true, "Debe ingresar un n° de teléfono de contacto"],
         match: [
             /^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/, 
             "Número de teléfono no válido"
         ],
-        default: 542616950111
+        default: 542610000000
     },
     provider: {
         type: String,

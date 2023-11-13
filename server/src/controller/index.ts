@@ -1,6 +1,8 @@
 
 import ConfirmacionEmail from "./confirmacionEmail";
+import RegistrarUsuario from "./registrarUsuario";
 
 export {
-    ConfirmacionEmail
+    ConfirmacionEmail,
+    RegistrarUsuario
 }

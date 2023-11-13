@@ -1,14 +1,14 @@
 "use client"
 
+import React from 'react'
 import axios, { AxiosError } from "axios";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers, FormikProps } from 'formik';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import BotonGoogle from "../../componentes/botonGoogle";
-import { validacionRegistrar } from "@/validaciones/validaciones";
-import Recaptcha from "@/componentes/recaptcha/recaptcha";
+import { validacionRegistrar, validacionConfirmar } from "@/validaciones/validaciones";
+import ReCAPTCHA from "react-google-recaptcha";
 
 type TipoDatos = {
   nombre: string
@@ -16,14 +16,17 @@ type TipoDatos = {
   email: string
   contraseña: string
   contraseñaD: string
-  recaptcha: boolean
+  telefono: string
 }
-
 
 function RegisPage() {
 
+  const [sitekey, setSitekey] = useState(process.env.NEXT_PUBLIC_CLAVE_DE_SITIO_RECAPTCHA);
+  const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef()
+
   const [noRobot, setNoRobot] = useState(false)
-  const router = useRouter();
+  const [errorRecaptcha, setErrorRecaptcha] = useState(false)
+  const [emailConfirmado, setEmailConfirmado] = useState(false)
   const { data: session, status } = useSession();
 
   const initialValues = {
@@ -32,17 +35,20 @@ function RegisPage() {
     email: '',
     contraseña: '',
     contraseñaD: '',
-    recaptcha: false,
+    telefono: '',
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
-    const datosConfirmar = {
-      email: values.email,
-      nombre: values.nombre
-    }
+
+    //const registrarUsuario = await axios.post("http://localhost:3001/api/registrarUsuario", values)
+
+  }
+
+  const confirmarEmail = async ({ nombre, email }: { nombre: string, email: string }) => {
 
     if (noRobot) {
-      const envioEmailCodigo = await axios.post("http://localhost:3001/api/confirmacion", datosConfirmar)
+      setErrorRecaptcha(false)
+      const envioEmailCodigo = await axios.post("http://localhost:3001/api/confirmacion", { nombre, email })
 
       if (envioEmailCodigo.data.codigoConfirmacion) {
         const result = await Swal.fire({
@@ -54,31 +60,34 @@ function RegisPage() {
             if (!value || value !== envioEmailCodigo.data.codigoConfirmacion) {
               return 'Código incorrecto'
             } else {
-            // setNoRobot(false)
+              // setNoRobot(false)
               return null
             }
           }
         });
-
         if (result.isConfirmed) {
-          //const registrarUsuario = await axios.post("http://localhost:3001/api/registrarUsuario", values)
           await Swal.fire({
             title: 'Email confirmado',
             timer: 2000,
             showConfirmButton: false
           });
+          setEmailConfirmado(true)
           return
         }
-      }
-      if (envioEmailCodigo.status) {
+      } else {
         Swal.fire({
-          title: 'Te has registrado en Patitas en casas',
-          text: ' noRobot',
-          icon: 'success'
+          title: 'Se a producido un error en la recepción del código de confirmación',
+          icon: 'error'
         })
       }
-    }
+    } else setErrorRecaptcha(true)
   }
+
+  function onChangeRecaptcha(value: string | null) {
+    if (value?.length !== 0) {
+      setNoRobot(true);
+    } else setNoRobot(false);
+  };
 
   return (
     <div className="h-[calc(100vh-12rem)] flex">
@@ -96,61 +105,106 @@ function RegisPage() {
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
-            validationSchema={validacionRegistrar}
+            validationSchema={emailConfirmado ? validacionRegistrar : validacionConfirmar}
           >
             {(formik: FormikProps<TipoDatos>) => {
               return (
                 <Form>
-                  <div>
-                    <Field
-                      type="text"
-                      name="nombre"
-                      placeholder="Ingrese su Nombre..."
-                      className="border"
-                    />
-                    <ErrorMessage name="nombre" component="div" className="border" />
-                  </div>
-                  <div>
-                    <Field
-                      type="text"
-                      name="apellido"
-                      placeholder="Ingrese su Apellido..."
-                      className="border"
-                    />
-                    <ErrorMessage name="apellido" component="div" className="border" />
-                  </div>
-                  <div>
+                  <div className="m-4">
                     <Field
                       type="text"
                       name="email"
                       placeholder="Ingrese su Email..."
-                      className="border"
+                      className="border pl-2"
+                      disabled={emailConfirmado === true}
                     />
                     <ErrorMessage name="email" component="div" className="border" />
                   </div>
-                  <div>
+                  <div className="m-4">
                     <Field
                       type="text"
-                      name="password"
-                      placeholder="Ingrese una Contraseña..."
-                      className="border"
+                      name="nombre"
+                      placeholder="Ingrese su Nombre..."
+                      className="border pl-2"
+                      disabled={emailConfirmado === true}
                     />
-                    <ErrorMessage name="password" component="div" className="border" />
+                    <ErrorMessage name="nombre" component="div" className="border" />
                   </div>
+                  {emailConfirmado &&
+                    <div>
+                      <div className="m-4">
+                        <Field
+                          type="text"
+                          name="apellido"
+                          placeholder="Ingrese su Apellido..."
+                          className="border pl-2"
+                        />
+                        <ErrorMessage name="apellido" component="div" className="border" />
+                      </div>
+                      <div className="m-4">
+                        <Field
+                          type="text"
+                          name="password"
+                          placeholder="Ingrese una Contraseña..."
+                          className="border pl-2"
+                        />
+                        <ErrorMessage name="password" component="div" className="border" />
+                      </div>
+                      <div className="m-4">
+                        <Field
+                          type="text"
+                          name="passwordD"
+                          placeholder="Repita la contraseña..."
+                          className="border pl-2"
+                        />
+                        <ErrorMessage name="passwordD" component="div" className="border" />
+                      </div>
+                      <div className="m-4">
+                        <Field
+                          type="text"
+                          name="telefono"
+                          placeholder="Teléfono de contacto..."
+                          className="border pl-2"
+                        />
+                        <ErrorMessage name="telefono" component="div" className="border" />
+                      </div>
+
+                    </div>
+
+                  }
                   <div>
-                    <Field
-                      type="text"
-                      name="passwordD"
-                      placeholder="Repita la contraseña..."
-                      className="border"
-                    />
-                    <ErrorMessage name="passwordD" component="div" className="border" />
+                    {sitekey &&
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={sitekey as string}
+                        onChange={onChangeRecaptcha}
+                      />
+                    }
+                    {!noRobot && errorRecaptcha &&
+                      <p>Debe marcar no soy Robot</p>
+                    }
                   </div>
+                  {
+                    emailConfirmado ?
+                      <div>
+                        <button type="submit" className="bg-indigo-500 px-4 py-2 rounded-lg">Registrarse</button>
+                      </div> :
+                      <div>
+                        <button type="button" onClick={() => confirmarEmail({ nombre: formik.values.nombre, email: formik.values.email })} className="bg-indigo-500 px-4 py-2 rounded-lg">Confirmar email</button>
+                      </div>
+                  }
+
                   <div>
-                    <Recaptcha setNoRobot={setNoRobot} />
-                  </div>
-                  <div>
-                    <button type="submit" className="bg-indigo-500 px-4 py-2 rounded-lg">Registrarse</button>
+                    <button
+                      type="reset"
+                      className="bg-red-400 px-4 py-2 rounded-lg"
+                      onClick={() => {
+                        recaptchaRef.current?.reset()
+                        setNoRobot(false)
+                        formik.resetForm()
+                      }
+                      }
+                    >Borrar Formulario</button>
                   </div>
                 </Form>
               )
@@ -159,7 +213,6 @@ function RegisPage() {
             }
           </Formik>
         </div>
-
       </div>
       <div className='justify-center flex items-center border border-red-600 w-[50%]'>
         foto
