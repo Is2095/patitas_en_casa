@@ -2,7 +2,7 @@
 import nodemailer from 'nodemailer';
 import { SentMessageInfo } from 'nodemailer';
 
-type Resultado = SentMessageInfo | {error: unknown}
+type Resultado = SentMessageInfo | {error: unknown};
 
 const EnvioCodigoConfirmacion = async ({ email, nombre, cuerpo, motivo, remitente, nameRemitente }: { email: string, nombre: string, cuerpo: string, motivo: string, remitente: string, nameRemitente: string }): Promise<Resultado> => {
 
@@ -32,9 +32,8 @@ const EnvioCodigoConfirmacion = async ({ email, nombre, cuerpo, motivo, remitent
         });
         return info;
     } catch (error) {
-        console.log(error, 'en envio de email');
         return { error };
-    }
-}
+    };
+};
 
 export default EnvioCodigoConfirmacion;

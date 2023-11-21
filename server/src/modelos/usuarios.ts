@@ -3,7 +3,7 @@ import { Schema, model, Document } from "mongoose";
 
 interface Usuario extends Document {
     email: string;
-    password: string;
+    contraseña: string;
     nombre: string;
     telefono: string;
     provider: string;
@@ -23,7 +23,7 @@ const usuarioSchema = new Schema({
             "Email no es válido (DB)"
         ]
     },
-    password: {
+    contraseña: {
         type: String,
         required: [true, "El password es requerido (DB)"],
         default: 'aA1=aaaa',

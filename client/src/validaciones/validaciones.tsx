@@ -5,8 +5,8 @@ interface DatosRegistrar {
     nombre: string;
     apellido: string;
     email: string;
-    password: string;
-    passwordD: string;
+    contraseña: string;
+    contraseñaD: string;
 }
 interface DatosConfirmar {
     nombre: string;
@@ -31,7 +31,7 @@ export const validacionRegistrar: yup.ObjectSchema<DatosRegistrar> = yup.object(
         .trim()
         .required("Se requiere un email")
         .email("El email no es válido"),
-    password: yup
+    contraseña: yup
         .string()
         .trim()
         .required("La contraseña es un campo requerido")
@@ -40,11 +40,11 @@ export const validacionRegistrar: yup.ObjectSchema<DatosRegistrar> = yup.object(
         .matches(/^(?=.*\d)/, "La contraseña debe tener al menos un número")
         .matches(/^(?=.*[@$!%*?&¡+#=])/, "La contraseña debe tener al menos una caracter especial")
         .matches(/^(?=.{8,})/, "La contraseña debe tener 8 caracteres"),
-    passwordD: yup
+    contraseñaD: yup
         .string()
         .trim()
-        .required("La contraseña es un campo requerido")
-        .oneOf([yup.ref("password")], "La contraseña no coincide"),
+        .required("Se requiere repetir la contraseña")
+        .oneOf([yup.ref("contraseña")], "La contraseña no coincide"),
     telefono: yup
         .string()
         .required("El número de teléfono es requerido")

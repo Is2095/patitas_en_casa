@@ -39,50 +39,90 @@ function RegisPage() {
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
-
-    //const registrarUsuario = await axios.post("http://localhost:3001/api/registrarUsuario", values)
+    const {contraseñaD, ...datosUsurarioARelgistrar} = values
+    console.log(datosUsurarioARelgistrar,'00000000000');
+    await axios.post("http://localhost:3001/api/registrarUsuario", datosUsurarioARelgistrar)
+    .then((data) => {
+      Swal.fire({
+        title: `Gracias: ${data.data.nombre}, te has registrado exitosamente`,
+        timer: 3000,
+        showConfirmButton: false
+      });
+    })
+    .catch(error => {      
+      Swal.fire({
+        title: `Se a producido un error inesperado`,
+        text: `${error.response.data.error}`,
+        icon: 'error'
+      })
+    })
+    //console.log('respuesta servidor registrar usuario', registrarUsuario.data);
 
   }
 
   const confirmarEmail = async ({ nombre, email }: { nombre: string, email: string }) => {
 
+    //if(noRobot) setEmailConfirmado(true)
+
     if (noRobot) {
       setErrorRecaptcha(false)
-      const envioEmailCodigo = await axios.post("http://localhost:3001/api/confirmacion", { nombre, email })
-
-      if (envioEmailCodigo.data.codigoConfirmacion) {
-        const result = await Swal.fire({
-          title: 'Ingrese el código',
-          input: 'text',
-          inputPlaceholder: 'Ingrese el código...',
-          showCancelButton: true,
-          inputValidator: (value) => {
-            if (!value || value !== envioEmailCodigo.data.codigoConfirmacion) {
-              return 'Código incorrecto'
-            } else {
-              // setNoRobot(false)
-              return null
-            }
+      await axios.post("http://localhost:3001/api/confirmacion", { nombre, email })
+        .then(envioEmailCodigo => {
+          if (envioEmailCodigo.data.codigoConfirmacion) {
+            const result = Swal.fire({
+              title: 'Ingrese el código',
+              input: 'text',
+              inputPlaceholder: 'Ingrese el código...',
+              showCancelButton: true,
+              inputValidator: (value) => {
+                if (!value || value !== envioEmailCodigo.data.codigoConfirmacion) {
+                  return 'Código incorrecto'
+                } else {
+                  // setNoRobot(false)
+                  return null
+                }
+              }
+            })
+              .then(resultado => {
+                if (resultado.isConfirmed) {
+                  Swal.fire({
+                    title: 'Email confirmado',
+                    timer: 2000,
+                    showConfirmButton: false
+                  });
+                  setEmailConfirmado(true)
+                  return
+                } else {
+                  Swal.fire({
+                    title: 'Se a producido un error en la recepción del código de confirmación',
+                    icon: 'error'
+                  })
+                }
+              })
           }
-        });
-        if (result.isConfirmed) {
-          await Swal.fire({
-            title: 'Email confirmado',
-            timer: 2000,
-            showConfirmButton: false
-          });
-          setEmailConfirmado(true)
-          return
-        }
-      } else {
-        Swal.fire({
-          title: 'Se a producido un error en la recepción del código de confirmación',
-          icon: 'error'
         })
-      }
-    } else setErrorRecaptcha(true)
-  }
 
+
+
+        //} else setErrorRecaptcha(true)
+
+        .catch(error => {
+          console.log(error);
+
+          Swal.fire({
+            title: error.response.data.error,
+            icon: 'error'
+          })
+        })
+
+
+
+
+
+
+
+    }
+  }
   function onChangeRecaptcha(value: string | null) {
     if (value?.length !== 0) {
       setNoRobot(true);
@@ -143,21 +183,21 @@ function RegisPage() {
                       </div>
                       <div className="m-4">
                         <Field
-                          type="text"
-                          name="password"
+                          type="password"
+                          name="contraseña"
                           placeholder="Ingrese una Contraseña..."
                           className="border pl-2"
                         />
-                        <ErrorMessage name="password" component="div" className="border" />
+                        <ErrorMessage name="contraseña" component="div" className="border" />
                       </div>
                       <div className="m-4">
                         <Field
-                          type="text"
-                          name="passwordD"
+                          type="password"
+                          name="contraseñaD"
                           placeholder="Repita la contraseña..."
                           className="border pl-2"
                         />
-                        <ErrorMessage name="passwordD" component="div" className="border" />
+                        <ErrorMessage name="contraseñaD" component="div" className="border" />
                       </div>
                       <div className="m-4">
                         <Field

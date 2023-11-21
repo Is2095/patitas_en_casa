@@ -31,32 +31,24 @@ const ConfirmacionEmail = async (req: Request, res: Response) => {
     try {
 
         const usuarioEmail = await UsuarioRegistrado({ email, nombre });
+
         if (usuarioEmail !== null) {
-            res.status(400).json({ message: 'El email ingresado ya está registrado' });
+            throw new Error(`El email: ${email} ya está registrado CONFIRMACION`)
+        } else {
+            const resultado = await EnvioCodigoConfirmacion(datos);
+            if ('error' in resultado) {
+                throw new Error('Hubo un error al enviar el código de confirmación');
+            } else {
+                return res.status(200).json({ codigoConfirmacion });
+            }
         }
-        // else {
-        //     await conectar();
-        //     // const emailRegistrado = await Usuarios.findOne({ email })
-
-
-        //         const user = new Usuarios({
-        //             email,
-        //             nombre,
-        //         })
-        //         const saveUser = await user.save();
-        //         res.status(200).json(saveUser) 
-        // }
-
-        const resultado = await EnvioCodigoConfirmacion(datos);
-        if ('error' in resultado) {
-            res.status(500).json({ message: 'Hubo un error al enviar del código de confirmación' });
-        };
-        return res.status(200).json({codigoConfirmacion});
-
     } catch (error) {
-        res.status(400).json({ error });
-    };
 
+        console.log(error, 'confirmacionEmail');
+        if (error instanceof Error) {
+            res.status(400).json({ error: error.message })
+        } else res.status(400).json(error)
+    };
 };
 
 export default ConfirmacionEmail;
