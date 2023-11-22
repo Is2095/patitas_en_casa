@@ -39,23 +39,22 @@ function RegisPage() {
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
-    const {contraseñaD, ...datosUsurarioARelgistrar} = values
-    console.log(datosUsurarioARelgistrar,'00000000000');
-    await axios.post("http://localhost:3001/api/registrarUsuario", datosUsurarioARelgistrar)
-    .then((data) => {
-      Swal.fire({
-        title: `Gracias: ${data.data.nombre}, te has registrado exitosamente`,
-        timer: 3000,
-        showConfirmButton: false
-      });
-    })
-    .catch(error => {      
-      Swal.fire({
-        title: `Se a producido un error inesperado`,
-        text: `${error.response.data.error}`,
-        icon: 'error'
+    const { contraseñaD, ...datosUsurarioARelgistrar } = values
+    await axios.post("http://localhost:3001/api/registrarUsuario", { ...datosUsurarioARelgistrar, confirmado: emailConfirmado })
+      .then((data) => {
+        Swal.fire({
+          title: `Gracias: ${data.data.nombre}, te has registrado exitosamente`,
+          timer: 3000,
+          showConfirmButton: false
+        });
       })
-    })
+      .catch(error => {
+        Swal.fire({
+          title: `Se a producido un error inesperado`,
+          text: `${error.response.data.error}`,
+          icon: 'error'
+        })
+      })
     //console.log('respuesta servidor registrar usuario', registrarUsuario.data);
 
   }

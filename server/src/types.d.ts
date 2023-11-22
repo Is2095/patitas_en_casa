@@ -1,13 +1,9 @@
 
 export interface DatosUsuario {
     email: string
-    password: string
+    contraseña: string
     nombre: string
-    telefono: number
-    provider: string
-    nivelAcceso: string
-    imagen: string
-    diaRegistro: string
+    telefono: string
 }
 
 export interface DatosConfirmacionEmail {
