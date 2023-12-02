@@ -9,6 +9,7 @@ const RegistrarUsuario = async (req: Request, res: Response) => {
 
     const { email } = req.body;
     const datosDelUsuario = req.body;
+    const nombreCompleto = datosDelUsuario.nombre.concat(" ", datosDelUsuario.apellido)
 
     try {
         await conectar();
@@ -17,9 +18,10 @@ const RegistrarUsuario = async (req: Request, res: Response) => {
             throw new Error(`El email: ${email} ya está registrado RU`)
         } else {
             const contraseñaHashed = await bcrypt.hash(datosDelUsuario.contraseña, 12)
-            const user = new Usuarios({ ...datosDelUsuario, contraseña: contraseñaHashed });
+            const user = new Usuarios({ ...datosDelUsuario, contraseña: contraseñaHashed, nombre: nombreCompleto });
             const saveUser = await user.save();
-            res.status(200).json({ nombre: saveUser.nombre, email: saveUser.email });
+            const nombre = saveUser.nombre.split(" ")[0]
+            res.status(200).json({ nombre, email: saveUser.email });
 
         }
     }

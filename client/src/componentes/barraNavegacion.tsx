@@ -49,7 +49,7 @@ function BarraNavegacion() {
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                   </svg>
                 </div>
-              ) : <img src={session?.user?.image || ''} alt=""
+              ) : <img src={session?.user?.image || ''} alt="no found"
                 className="w-10 h-10 rounded-full p-2"
               />) : null
           }

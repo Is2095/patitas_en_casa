@@ -1,14 +1,15 @@
 "use client"
 
-import React from 'react'
-import axios, { AxiosError } from "axios";
+import React from 'react';
+import axios from "axios";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers, FormikProps } from 'formik';
-import { useSession } from 'next-auth/react';
 import { useState } from "react";
 import Swal from "sweetalert2";
 import BotonGoogle from "../../componentes/botonGoogle";
 import { validacionRegistrar, validacionConfirmar } from "@/validaciones/validaciones";
 import ReCAPTCHA from "react-google-recaptcha";
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 type TipoDatos = {
   nombre: string
@@ -17,17 +18,18 @@ type TipoDatos = {
   contraseña: string
   contraseñaD: string
   telefono: string
-}
+};
 
 function RegisPage() {
 
   const [sitekey, setSitekey] = useState(process.env.NEXT_PUBLIC_CLAVE_DE_SITIO_RECAPTCHA);
-  const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef()
+  const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef();
 
-  const [noRobot, setNoRobot] = useState(false)
-  const [errorRecaptcha, setErrorRecaptcha] = useState(false)
-  const [emailConfirmado, setEmailConfirmado] = useState(false)
-  const { data: session, status } = useSession();
+  const [noRobot, setNoRobot] = useState(false);
+  const [errorRecaptcha, setErrorRecaptcha] = useState(false);
+  const [emailConfirmado, setEmailConfirmado] = useState(false);
+
+  const router = useRouter();
 
   const initialValues = {
     nombre: '',
@@ -39,7 +41,7 @@ function RegisPage() {
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
-    const { contraseñaD, ...datosUsurarioARelgistrar } = values
+    const { contraseñaD, ...datosUsurarioARelgistrar } = values;
     await axios.post("http://localhost:3001/api/registrarUsuario", { ...datosUsurarioARelgistrar, confirmado: emailConfirmado })
       .then((data) => {
         Swal.fire({
@@ -47,6 +49,21 @@ function RegisPage() {
           timer: 3000,
           showConfirmButton: false
         });
+        recaptchaRef.current?.reset();
+        setEmailConfirmado(false);
+        setNoRobot(false);
+        onSubmitProps.resetForm();
+
+        signIn('credentials', {
+          email: values.email,
+          contraseña: values.contraseña,
+          redirect: false,
+        })
+          .then(res => {
+            if (res?.error) return console.log(`Error: ${res.error}`);
+            if (res?.ok) return;
+            router.push('/');
+          })
       })
       .catch(error => {
         Swal.fire({
@@ -54,17 +71,13 @@ function RegisPage() {
           text: `${error.response.data.error}`,
           icon: 'error'
         })
-      })
-    //console.log('respuesta servidor registrar usuario', registrarUsuario.data);
-
-  }
+      });
+  };
 
   const confirmarEmail = async ({ nombre, email }: { nombre: string, email: string }) => {
 
-    //if(noRobot) setEmailConfirmado(true)
-
     if (noRobot) {
-      setErrorRecaptcha(false)
+      setErrorRecaptcha(false);
       await axios.post("http://localhost:3001/api/confirmacion", { nombre, email })
         .then(envioEmailCodigo => {
           if (envioEmailCodigo.data.codigoConfirmacion) {
@@ -77,9 +90,9 @@ function RegisPage() {
                 if (!value || value !== envioEmailCodigo.data.codigoConfirmacion) {
                   return 'Código incorrecto'
                 } else {
-                  // setNoRobot(false)
-                  return null
-                }
+                  setNoRobot(false);
+                  return null;                  
+                };
               }
             })
               .then(resultado => {
@@ -98,30 +111,29 @@ function RegisPage() {
                   })
                 }
               })
-          }
+          } else {
+            Swal.fire({
+              title: 'Se a producido un error en la recepción del código de confirmación',
+              icon: 'error'
+            });
+          };
         })
-
-
-
-        //} else setErrorRecaptcha(true)
-
         .catch(error => {
           console.log(error);
-
           Swal.fire({
             title: error.response.data.error,
             icon: 'error'
           })
-        })
+        });
+    } else {
+      Swal.fire({
+        title: 'Marque la casilla de ReCaptcha',
+        timer: 2000,
+        icon: 'error'
+      });
+    };
+  };
 
-
-
-
-
-
-
-    }
-  }
   function onChangeRecaptcha(value: string | null) {
     if (value?.length !== 0) {
       setNoRobot(true);

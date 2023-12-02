@@ -9,7 +9,13 @@ function BotonGoogle() {
     return (
 
         <div>
-            <button onClick={() => signIn("google", { callbackUrl: '/', redirect: false })} type="button" className="bg-red-600 text-white px-4 py-2 rounded-lg">
+            <button onClick={() => {
+                signIn("google", { callbackUrl: '/', redirect: false })
+                console.log(status, '0000', session?.user)
+}
+            } type="button" className="bg-red-600 text-white px-4 py-2 rounded-lg"
+        
+            >
                 Continuar con Google
             </button>
         </div>
