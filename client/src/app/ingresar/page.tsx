@@ -19,8 +19,8 @@ type TipoDatos = {
 
 function ingresarPage() {
 
-    const router = useRouter()
-    const [sitekey, setSitekey] = useState(process.env.NEXT_PUBLIC_CLAVE_DE_SITIO_RECAPTCHA)
+    const router = useRouter();
+    const [sitekey, setSitekey] = useState(process.env.NEXT_PUBLIC_CLAVE_DE_SITIO_RECAPTCHA);
     const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef();
     const [noRobot, setNoRobot] = useState(false);
     const [errorRecaptcha, setErrorRecaptcha] = useState(false);
@@ -28,7 +28,7 @@ function ingresarPage() {
     const initialValues = {
         email: '',
         contraseña: '',
-    }
+    };
 
     const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
 
@@ -53,23 +53,10 @@ function ingresarPage() {
                         showConfirmButton: false
                     });
                     return;
-                }
+                };
                 router.push('/');
-            })
-
-        // await axios.post("http://localhost:3001/api/buscarUsuario", values)
-        //     .then((data) => {
-
-
-        //     })
-        //     .catch(error => {
-        //         Swal.fire({
-        //             title: `Se a producido un error inesperado`,
-        //             text: `${error.response.data.error}`,
-        //             icon: 'error'
-        //         })
-        //     })
-    }
+            });
+    };
 
     function onChangeRecaptcha(value: string | null) {
         if (value?.length !== 0) {
