@@ -13,20 +13,22 @@ const BuscarUsuario = async (req: Request, res: Response) => {
 
         const usuarioBuscado = await Usuarios.findOne({ email }).select("+contraseña")
         if (!usuarioBuscado) {
-            res.status(400).json('Usuario no existe')
-        } else {             
+            res.status(400).json({message: `El email: ${email} no existe en nuestra base de datos`})
+        } else {
             const dato = {
                 id: usuarioBuscado._id,
                 email: usuarioBuscado.email,
                 contraseña: usuarioBuscado.contraseña,
                 nombre: usuarioBuscado.nombre,
-                telefono: usuarioBuscado.telefono,    
-                imagen: usuarioBuscado.imagen,               
-             };       
-            return res.status(200).json({dato});
+                telefono: usuarioBuscado.telefono,
+                imagen: usuarioBuscado.imagen,
+            };
+            return res.status(200).json({ dato });
         };
     } catch (error) {
-        res.status(400).json(errorMonitor);
+        if (error) {
+            res.status(400).json({ message: error })
+        } else res.status(400).json(errorMonitor);
     };
 };
 

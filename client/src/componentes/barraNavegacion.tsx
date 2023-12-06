@@ -38,7 +38,7 @@ function BarraNavegacion() {
               }} >Salir</button>
             </li>) :
             <li className="mx-2">
-              <Link href='/login' className="text-sky-700 hover:text-sky-900 hover:font-bold">Ingresar</Link>
+              <Link href='/ingresar' className="text-sky-700 hover:text-sky-900 hover:font-bold">Ingresar</Link>
             </li>
           }
           {

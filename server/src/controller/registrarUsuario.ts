@@ -9,7 +9,7 @@ const RegistrarUsuario = async (req: Request, res: Response) => {
 
     const { email } = req.body;
     const datosDelUsuario = req.body;
-    const nombreCompleto = datosDelUsuario.nombre.concat(" ", datosDelUsuario.apellido)
+     const nombreCompleto = datosDelUsuario.nombre.concat(" ", datosDelUsuario.apellido)
 
     try {
         await conectar();
