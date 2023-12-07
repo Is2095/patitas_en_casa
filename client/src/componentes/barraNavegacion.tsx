@@ -67,16 +67,16 @@ function BarraNavegacion() {
             <Link href='/' className="text-sky-700 hover:text-sky-900 hover:font-bold">Inicio</Link>
           </li>
           <li className="mx-3">
-            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Protectoras</Link>
+            <Link href='/protectoras' className="text-sky-700 hover:text-sky-900 hover:font-bold">Protectoras</Link>
           </li>
           <li className="mx-3">
-            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Dar en adopción</Link>
+            <Link href='adopcion' className="text-sky-700 hover:text-sky-900 hover:font-bold">Dar en adopción</Link>
           </li>
           <li className="mx-3">
-            <Link href='' className="text-sky-700 hover:text-sky-900 hover:font-bold">Busca tu match</Link>
+            <Link href='match' className="text-sky-700 hover:text-sky-900 hover:font-bold">Busca tu match</Link>
           </li>
           <li className="mx-3">
-            <Link href='/about' className="text-sky-700 hover:text-sky-900 hover:font-bold">Acerca de</Link>
+            <Link href='/acercaDeMi' className="text-sky-700 hover:text-sky-900 hover:font-bold">Acerca de</Link>
           </li>
         </ul>
       </div>
