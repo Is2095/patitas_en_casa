@@ -44,17 +44,20 @@ function ingresarPage() {
                         timer: 4000,
                         showConfirmButton: false
                     });
-                return console.log(`Error: ${res}`);
-            }
+                    return console.log(`Error: ${res}`);
+                }
                 if (res?.ok) {
                     Swal.fire({
                         title: `Gracias has ingresado exitosamente a Patitas en Casa`,
                         timer: 3000,
                         showConfirmButton: false
                     });
-                    return;
+                    recaptchaRef.current?.reset();
+                    setNoRobot(false);
+                    onSubmitProps.resetForm();
+
+                    return router.push('/');
                 };
-                router.push('/');
             });
     };
 
