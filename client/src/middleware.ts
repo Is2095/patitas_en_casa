@@ -11,5 +11,5 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next()
 }
 export const config = {
-  matcher: ['/protectoras', '/adopcion', '/match', '/acercaDeMi'],
+  matcher: [ '/adopcion', '/match', '/acercaDeMi'],
 }
