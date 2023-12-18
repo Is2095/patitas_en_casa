@@ -1,3 +1,8 @@
+
+
+
+
+
 "use client"
 
 import React from 'react';
@@ -15,7 +20,7 @@ import { validacionIngresar } from '@/validaciones/validaciones';
 type TipoDatos = {
     email: string
     contraseña: string
-}
+};
 
 function ingresarPage() {
 
@@ -31,34 +36,41 @@ function ingresarPage() {
     };
 
     const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
+        if (noRobot) {
+            signIn('credentials', {
+                email: values.email,
+                contraseña: values.contraseña,
+                redirect: false,
+            })
+                .then(res => {
+                    if (res?.error) {
+                        Swal.fire({
+                            title: `${res.error}`,
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
+                        return console.log(`Error: ${res}`);
+                    }
+                    if (res?.ok) {
+                        Swal.fire({
+                            title: `Gracias has ingresado exitosamente a Patitas en Casa`,
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        recaptchaRef.current?.reset();
+                        setNoRobot(false);
+                        onSubmitProps.resetForm();
 
-        signIn('credentials', {
-            email: values.email,
-            contraseña: values.contraseña,
-            redirect: false,
-        })
-            .then(res => {
-                if (res?.error) {
-                    Swal.fire({
-                        title: `${res.error}`,
-                        timer: 4000,
-                        showConfirmButton: false
-                    });
-                    return console.log(`Error: ${res}`);
-                }
-                if (res?.ok) {
-                    Swal.fire({
-                        title: `Gracias has ingresado exitosamente a Patitas en Casa`,
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                    recaptchaRef.current?.reset();
-                    setNoRobot(false);
-                    onSubmitProps.resetForm();
-
-                    return router.push('/');
-                };
+                        return router.push('/');
+                    };
+                });
+        } else {
+            Swal.fire({
+                title: 'Debe hacer click en "No soy robot"',
+                timer: 4000,
+                showConfirmButton: false
             });
+        };
     };
 
     function onChangeRecaptcha(value: string | null) {
@@ -66,6 +78,7 @@ function ingresarPage() {
             setNoRobot(true);
         } else setNoRobot(false);
     };
+
     return (
         <div className="h-[calc(100vh-12rem)] flex border border-green-500">
             <div className="border border-black w-[50%]">
@@ -124,9 +137,7 @@ function ingresarPage() {
                                 </Form>
                             )
                         }
-
                         }
-
                     </Formik>
                 </div>
 
@@ -134,9 +145,8 @@ function ingresarPage() {
             <div className="justify-center flex items-center border border-red-600 w-[50%]">
                 Foto
             </div>
-
-
         </div>
-    )
-}
+    );
+};
+
 export default ingresarPage;

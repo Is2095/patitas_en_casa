@@ -6,12 +6,12 @@ import { errorMonitor } from 'nodemailer/lib/xoauth2';
 
 const BuscarUsuario = async (req: Request, res: Response) => {
 
-    const { email } = req.body;
+    const { email, id } = req.body;
 
     try {
-        await conectar()
+        await conectar();
 
-        const usuarioBuscado = await Usuarios.findOne({ email }).select("+contraseña")
+        const usuarioBuscado = await Usuarios.findOne({ email }).select("+contraseña");
         if (!usuarioBuscado) {
             res.status(400).json({message: `El email: ${email} no existe en nuestra base de datos`});
         } else {
