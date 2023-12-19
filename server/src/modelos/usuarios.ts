@@ -1,11 +1,13 @@
 
 import { Schema, model, Document } from "mongoose";
+import moment from 'moment';
 
 interface Usuario extends Document {
     email: string;
     contraseña: string;
     nombre: string;
     telefono: string;
+    fechaNacimiento: string;
     provider: string;
     //favoritos: Animal[];
     nivelAcceso: string;
@@ -39,10 +41,21 @@ const usuarioSchema = new Schema({
         type: String,
         requered: [true, "Debe ingresar un n° de teléfono de contacto"],
         match: [
-            /^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/, 
+            /^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/,
             "Número de teléfono no válido"
         ],
         default: 542610000000
+    },
+    fechaNacimiento: {
+        type: Date,
+        required: [true, 'La fecha de nacimiento es requerida'],
+        validate: {
+            validator: function(v: Date) {
+                const edad = moment().diff(moment(v), 'years');
+                return edad >= 18 && edad<=100;
+            },
+            message: (props: any) => `${props.value} es una edad inválida`
+        }
     },
     provider: {
         type: String,
@@ -54,6 +67,7 @@ const usuarioSchema = new Schema({
     //     default: [],
     // },
     nivelAcceso: {
+        
         type: String,
         requered: true,
         default: '1'
@@ -62,7 +76,7 @@ const usuarioSchema = new Schema({
         type: String,
         required: false,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX-BH0rwTlqY-_4BGCB_EYWt0vkOJkI8aBDQ&usqp=CAU"
-    }, 
+    },
     diaRegistro: {
         type: String,
         required: false,
