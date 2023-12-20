@@ -34,5 +34,11 @@ export const validacionDatosParaRegistrarUsuario: yup.ObjectSchema<DatosUsuario>
         .matches(/^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/, "debe ser un número de teléfono de Mendoza-Argentina"),
     confirmado: yup
         .boolean()
-        .required("Posible ingreso indebido")
+        .required("Posible ingreso indebido"),
+    fechaNacimiento: yup
+        .date()
+        .required('La fecha de nacimiento es requerida')
+        .max(new Date(), "La fecha no puede ser superior a la actual")
+        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 100)), "La edad no debe superar los 100 años")
+        .max(new Date(new Date().setFullYear(new Date().getFullYear() - 18)), "La edad debe superar los 18 años")
 });

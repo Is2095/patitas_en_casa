@@ -4,6 +4,7 @@ export interface DatosUsuario {
     contraseña: string
     nombre: string
     telefono: string
+    fechaNacimiento: Date
 }
 
 export interface DatosConfirmacionEmail {
