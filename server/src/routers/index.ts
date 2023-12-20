@@ -13,6 +13,6 @@ router.get('/prueba', ValidacionSesionActiva, () => {
     console.log('prueba superada');
 })
 
-router.patch('/actualizarDatosUsuario/:id', ActualizarDatosUsuario);
+router.patch('/actualizarDatosUsuario/:id', ValidacionSesionActiva, ActualizarDatosUsuario);
 
 export default router;

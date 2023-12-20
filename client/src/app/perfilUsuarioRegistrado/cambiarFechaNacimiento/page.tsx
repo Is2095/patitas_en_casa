@@ -4,19 +4,20 @@ import { useSession } from 'next-auth/react';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import Link from 'next/link';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers, FormikProps } from 'formik';
-import { validacionTelefono } from "@/validaciones/validaciones";
+import { validacionFechaNacimiento } from '@/validaciones/validaciones';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true
 
-type Telefono = {
-    telefono: string
+type FechaNacimiento= {
+    fechaNacimiento: Date
 };
 type DatosUsuario = {
     id: string,
     email: string,
     image: string,
-    name: string
+    name: string,
+    fechaNacimiento: Date,
 };
 
 
@@ -24,12 +25,13 @@ const CambiarTelefono = () => {
 
     const { data: session, status } = useSession();
     const datosUsuario = session?.user as DatosUsuario;
+
     const initialValues = {
-        telefono: ''
+        fechaNacimiento: new Date()
     };
 
-    const onSubmit = async (values: Telefono, onSubmitProps: FormikHelpers<Telefono>) => {
-        await axios.patch(`http://localhost:3001/api/actualizarDatosUsuario/${datosUsuario.id}`, { telefono: values.telefono, email: datosUsuario.email })
+    const onSubmit = async (values: FechaNacimiento, onSubmitProps: FormikHelpers<FechaNacimiento>) => {
+        await axios.patch(`http://localhost:3001/api/actualizarDatosUsuario/${datosUsuario.id}`, { fechaNacimiento: values.fechaNacimiento, email: datosUsuario.email })
         .then(data => console.log(data.data))
         .catch(error => console.log(error))
     }
@@ -39,27 +41,27 @@ const CambiarTelefono = () => {
                 <Link href='/perfilUsuarioRegistrado'>
                     <IoChevronBackOutline className='h-6 w-6 stroke-current' />
                 </Link>
-                <h3 className='text-xl font-bold leading-normal'>Número de teléfono</h3>
+                <h3 className='text-xl font-bold leading-normal'>Fecha de Nacimiento</h3>
             </div>
             <Formik
                 initialValues={initialValues}
                 onSubmit={onSubmit}
-                validationSchema={validacionTelefono}
+                validationSchema={validacionFechaNacimiento}
             >
-                {(formik: FormikProps<Telefono>) => {
+                {(formik: FormikProps<FechaNacimiento>) => {
                     return (
                         <Form>
                             <div>
                                 <div>
                                     <Field
-                                        type="text"
-                                        name="telefono"
-                                        placeholder="Ingrese teléfono actual..."
+                                        type="date"
+                                        name="fechaNacimiento"
+                                        placeholder="Ingrese fecha de nacimiento correcta..."
                                     />
-                                    <ErrorMessage name='telefono' component="div" />
+                                    <ErrorMessage name='fechaNacimiento' component="div" />
                                 </div>
                                 <div>
-                                    <button type="submit" className="bg-indigo-500 px-4 py-2 rounded-lg">Actualizar teléfono</button>
+                                    <button type="submit" className="bg-indigo-500 px-4 py-2 rounded-lg">Actualizar Fecha de Nacimiento</button>
                                 </div>
                             </div>
                         </Form>

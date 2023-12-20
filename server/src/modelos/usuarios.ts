@@ -7,7 +7,7 @@ interface Usuario extends Document {
     contraseña: string;
     nombre: string;
     telefono: string;
-    fechaNacimiento: string;
+    fechaNacimiento: Date;
     provider: string;
     //favoritos: Animal[];
     nivelAcceso: string;

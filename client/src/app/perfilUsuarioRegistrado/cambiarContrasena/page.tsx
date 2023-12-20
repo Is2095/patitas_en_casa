@@ -7,6 +7,8 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers, FormikProps } from 'f
 import { validacionContraseña } from "@/validaciones/validaciones";
 import axios from 'axios';
 
+axios.defaults.withCredentials = true
+
 type Contraseña = {
     contraseña: string
     contraseñaD: string
@@ -26,7 +28,9 @@ const CambiarContrasena = () => {
     };
 
     const onSubmit = async (values: Contraseña, onSubmitProps: FormikHelpers<Contraseña>) => {
-        const result = await axios.patch(`http://localhost:3001/api/actualizarDatosUsuario/${datosUsuario.id}`, { contraseña: values.contraseña, email: datosUsuario.email });
+        await axios.patch(`http://localhost:3001/api/actualizarDatosUsuario/${datosUsuario.id}`, { contraseña: values.contraseña, email: datosUsuario.email })
+        .then(data => console.log(data.data))
+        .catch(error => console.log(error))
     };
 
     return (

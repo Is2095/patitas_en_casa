@@ -23,6 +23,9 @@ interface Telefono {
 interface Contraseña {
     contraseña: string
 };
+interface FechaNacimiento {
+    fechaNacimiento: Date
+}
 
 export const validacionRegistrar: yup.ObjectSchema<DatosRegistrar> = yup.object({
     nombre: yup
@@ -102,6 +105,14 @@ export const validacionTelefono: yup.ObjectSchema<Telefono> = yup.object({
         .required("El número de teléfono es requerido")
         .matches(/^(?:(?:\+?54?[-\s]?)?(?:9?[-\s]?)?)?(\d{3})(?:[-\s]?\d{7})$/, "debe ser un número de teléfono de Mendoza-Argentina")
 });
+export const validacionFechaNacimiento: yup.ObjectSchema<FechaNacimiento> = yup.object({
+    fechaNacimiento: yup
+        .date()
+        .required('La fecha de nacimiento es requerida')
+        .max(new Date(), "La fecha no puede ser superior a la actual")
+        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 100)), "La edad no debe superar los 100 años")
+        .max(new Date(new Date().setFullYear(new Date().getFullYear() - 18)), "La edad debe superar los 18 años")
+})
 export const validacionContraseña: yup.ObjectSchema<Contraseña> = yup.object({
     contraseña: yup
         .string()

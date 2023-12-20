@@ -1,6 +1,7 @@
 
+
 import Link from 'next/link';
-import { AiOutlinePhone } from 'react-icons/ai';
+import { AiOutlineCalendar, AiOutlinePhone } from 'react-icons/ai';
 import { RiLockPasswordLine } from 'react-icons/ri';
 
 const PerfilUsuarioRegistrado = () => {
@@ -13,6 +14,12 @@ const PerfilUsuarioRegistrado = () => {
                     <div className='bg-white flex items-center gap-2 w-full mb-6 shadow-xl rounded-lg p-4 hover:bg-[#868887be] duration-200 hover:text-white'>
                         <AiOutlinePhone className="h-6 w-6 stroke-current" />
                         Cambiar número telefónico
+                    </div>
+                </Link>
+                <Link rel='stylesheet' href="/perfilUsuarioRegistrado/cambiarFechaNacimiento">
+                    <div className='bg-white flex items-center gap-2 w-full mb-6 shadow-xl rounded-lg p-4 hover:bg-[#868887be] duration-200 hover:text-white'>
+                        <AiOutlineCalendar className="h-6 w-6 stroke-current" />
+                        Cambiar Fecha de Nacimiento
                     </div>
                 </Link>
                 <Link rel="stylesheet" href="/perfilUsuarioRegistrado/cambiarContrasena">
