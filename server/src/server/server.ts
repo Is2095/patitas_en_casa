@@ -3,7 +3,8 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import router from "../routers";
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
+import ValidacionSesionActiva from "../middlewares/validacionSesionActiva";
 
 const app = express();
 
@@ -31,6 +32,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/api", router);
+app.use("/api", ValidacionSesionActiva, router);
 
 export default app;
