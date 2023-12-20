@@ -18,6 +18,7 @@ type TipoDatos = {
   contraseña: string
   contraseñaD: string
   telefono: string
+  fechaNacimiento: Date
 };
 
 function RegisPage() {
@@ -38,6 +39,7 @@ function RegisPage() {
     contraseña: '',
     contraseñaD: '',
     telefono: '',
+    fechaNacimiento: new Date()
   };
 
   const onSubmit = async (values: TipoDatos, onSubmitProps: FormikHelpers<TipoDatos>) => {
@@ -218,6 +220,15 @@ function RegisPage() {
                           className="border pl-2"
                         />
                         <ErrorMessage name="telefono" component="div" className="border" />
+                      </div>
+                      <div className="m-4">
+                        <Field
+                          type="date"
+                          name="fechaNacimiento"
+                          placeholder="Fecha de Nacimiento..."
+                          className="border pl-2"
+                        />
+                        <ErrorMessage name="fechaNacimiento" component="div" className="border" />
                       </div>
 
                     </div>
