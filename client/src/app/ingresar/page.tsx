@@ -47,6 +47,7 @@ function ingresarPage() {
                         Swal.fire({
                             title: `${res.error}`,
                             timer: 4000,
+                            icon: 'error',
                             showConfirmButton: false
                         });
                         return console.log(`Error: ${res}`);

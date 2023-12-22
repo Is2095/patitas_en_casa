@@ -33,18 +33,20 @@ const handler = NextAuth({
             },
             async authorize(credentials, req) {
                 try {
+
                     const respuesta = await axios.post('http://localhost:3001/api/buscarUsuario', { email: credentials?.email })
-                    const encontrarUsuario = respuesta.data
-                    const { contraseña, ...usuarioBuscado } = encontrarUsuario.dato
+                    const usuario = respuesta.data
+                    
+                    const { contraseña, ...usuarioBuscado } = usuario
                     const datosUsuarioAutenticacion = {
-                        id: usuarioBuscado.id,
+                        id: usuarioBuscado._id,
                         email: usuarioBuscado.email,
                         name: usuarioBuscado.nombre,
                         image: usuarioBuscado.imagen,
                         contraseña: 0
                     }
             
-                    if (!encontrarUsuario.dato) {
+                    if (!usuario) {
                         throw new Error("Usuario no existe");
                     } else {
                         const compararContraseña = await bcrypt.compare(credentials!.contraseña, contraseña);

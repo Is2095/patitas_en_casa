@@ -29,6 +29,8 @@ const CambiarTelefono = () => {
     };
 
     const onSubmit = async (values: Telefono, onSubmitProps: FormikHelpers<Telefono>) => {
+        console.log(datosUsuario.id, session?.user);
+        
         await axios.patch(`http://localhost:3001/api/actualizarDatosUsuario/${datosUsuario.id}`, { telefono: values.telefono, email: datosUsuario.email })
         .then(data => console.log(data.data))
         .catch(error => console.log(error))

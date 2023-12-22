@@ -13,12 +13,12 @@ const ValidacionSesionActiva = async (req: Request, res: Response, next: NextFun
     const session = await getToken({ req, secret: secreto });
 
     const { email } = req.body;
-    // console.log(sessionToken, '-----', session?.email, '--------', email);
-    
+    let usuario2
     if (session?.email && sessionToken) {
         
-        const usuario = await HandlersBuscarUsuario({ email: session?.email, _id: '' });
-        if (usuario?.email === email) {
+        const usuario = await HandlersBuscarUsuario({ email: session?.email });
+        if (usuario) usuario2 = usuario.usuarioEmail
+        if (usuario2?.email === email) {
             next()
         } else {
             res.status(400).json({ message: 'Error de sesión 1' });

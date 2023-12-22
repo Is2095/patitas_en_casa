@@ -1,29 +1,19 @@
 
 import { Request, Response } from 'express';
-import { conectar } from '../baseDeDatos/conectar';
-import Usuarios from '../modelos/usuarios';
 import { errorMonitor } from 'nodemailer/lib/xoauth2';
+import HandlersBuscarUsuarioContraseña from '../handlers/handlers-BuscarUsuarioContraseña';
+
 
 const BuscarUsuario = async (req: Request, res: Response) => {
 
     const { email, id } = req.body;
 
     try {
-        await conectar();
-
-        const usuarioBuscado = await Usuarios.findOne({ email }).select("+contraseña");
+        const usuarioBuscado = await HandlersBuscarUsuarioContraseña({ email, id });
         if (!usuarioBuscado) {
-            res.status(400).json({message: `El email: ${email} no existe en nuestra base de datos`});
+            res.status(400).json({ message: `El email: ${email} no existe en nuestra base de datos` });
         } else {
-            const dato = {
-                id: usuarioBuscado._id,
-                email: usuarioBuscado.email,
-                contraseña: usuarioBuscado.contraseña,
-                nombre: usuarioBuscado.nombre,
-                telefono: usuarioBuscado.telefono,
-                imagen: usuarioBuscado.imagen,
-            };
-            return res.status(200).json({ dato });
+            return res.status(200).json(usuarioBuscado);
         };
     } catch (error) {
         if (error) {
