@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSession } from 'next-auth/react';
 import MenuPerfilUsuario from "./menuPerfilUsuario";
+import Clima from "./clima/clima";
 
 type Usuario = {
   email: string | undefined,
@@ -18,6 +19,9 @@ function BarraNavegacion() {
   return (
 
     <nav className="border border-black p-2">
+      <div className="flex justify-end pr-2 border border-blue">
+      <Clima/>
+      </div>
       <div className="flex justify-around  border border-red-800 m-1">
         <Link href='/'>
           <h1 className="font-bold text-xl">
@@ -25,7 +29,7 @@ function BarraNavegacion() {
           </h1>
         </Link>
         <ul className="flex items-center justify-center">
-          <li className="mx-2">
+          <li className="mx-2 w-24">
             {status === 'authenticated' ?
               (
                 null
@@ -39,10 +43,13 @@ function BarraNavegacion() {
             status === 'authenticated' ? (
               <MenuPerfilUsuario usuario={usuario} />
             ) :
-              <li className="mx-2">
+              <li className="mx-2 w-16">
                 <Link href='/ingresar' className="text-sky-700 hover:text-sky-900 hover:font-bold">Ingresar</Link>
               </li>
           }
+          {/* <li>
+           
+          </li> */}
         </ul>
       </div>
       <div className="border border-red-400 m-1">
